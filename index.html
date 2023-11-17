@@ -11,7 +11,7 @@
             let timerId;
             window.onload = init;
             function init() {
-                timerId = serInterval(tick, 100);
+                timerId = setInterval(tick, 100);
             }
             function tick() {
                 v0 += 1;
