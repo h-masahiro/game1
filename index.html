@@ -2,8 +2,101 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <style>
+            
+        </style>
+        <script>
+            "use strict";
+            class Material {
+                constructor(name) {
+                    this.name = name;
+                    this.num = 0;
+                }
+            }
+
+            class Building {
+                constructor(name, baseCost, costRate, basePower) {
+                    this.name = name;
+                    this.num = 0;
+                    this.baseCost = baseCost;
+                    this.costRate = costRate;
+                    this.basepower = basePower;
+                }
+            }
+
+            let materials = [];
+            materials.push(new Material("木"));
+            materials.push(new Material("石"));
+            materials.push(new Material("鉄"));
+            materials.push(new Material("鋼鉄"));
+
+            let buildings = [];
+            buildings.push(new Building("人工林", 10, 1.2, 1));
+            buildings.push(new Building("石切り場", 10, 1.2, 1));
+
+
+            let timerId;
+            window.onload = init;
+            function init() {
+                timerId = setInterval(tick, 100);
+
+                for (let i=0;i<materials.length;i++) {
+                    let parent = document.getElementById("materiallist");
+                    let item = document.createElement("div");
+                    let item1 = document.createElement("span");
+                    item1.textContent = materials[i].name;
+                    let item2 = document.createElement("span");
+                    item2.textContent = " : ";
+                    let item3 = document.createElement("span");
+                    item3.id = "m" + i + "n";
+                    item3.textContent = materials[i].num;
+                    item.appendChild(item1);
+                    item.appendChild(item2);
+                    item.appendChild(item3);
+                    parent.appendChild(item);
+                }
+                for (let i=0;i<buildings.length;i++) {
+                    let parent = document.getElementById("buildinglist");
+                    let item = document.createElement("div");
+                    let item1 = document.createElement("span");
+                    item1.textContent = buildings[i].name;
+                    let item2 = document.createElement("span");
+                    item2.textContent = " : ";
+                    let item3 = document.createElement("span");
+                    item3.id = "b" + i + "n";
+                    item3.textContent = buildings[i].num;
+                    let item4 = document.createElement("span");
+                    item4.textContent = " ";
+                    let item5 = document.createElement("button");
+                    item5.textContent = "+";
+                    let item6 = document.createElement("span");
+                    item6.textContent = " ";
+                    let item7 = document.createElement("span");
+                    item7.textContent = buildings[i].baseCost;
+                    
+                    item.appendChild(item1);
+                    item.appendChild(item2);
+                    item.appendChild(item3);
+                    item.appendChild(item4);
+                    item.appendChild(item5);
+                    item.appendChild(item6);
+                    item.appendChild(item7);
+                    parent.appendChild(item);
+                }
+
+                
+            }
+            function tick() {
+                materials[0].num += 1;
+                document.getElementById("m0n").textContent = materials[0].num;
+            }
+            
+            
+        </script>
     </head>
     <body>
-        <p>テスト</p>
+        <h1>放置ゲーム</h1>
+        <div id="materiallist"></div>
+        <div id="buildinglist"></div>
     </body>
 </html>
