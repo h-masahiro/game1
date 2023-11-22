@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <title>シンプルな放置ゲーム</title>
         <style>
             
         </style>
@@ -20,25 +21,38 @@
                     this.num = 0;
                     this.baseCost = baseCost;
                     this.costRate = costRate;
-                    this.basepower = basePower;
+                    this.basePower = basePower;
+                }
+
+                cost() {
+                    let cost = this.baseCost;
+                    for (let i=0;i<this.num;i++) {
+                        cost *= this.costRate;
+                    }
+                    cost = Math.ceil(cost);
+                    return cost;
                 }
             }
 
             let materials = [];
             materials.push(new Material("木"));
-            materials.push(new Material("石"));
-            materials.push(new Material("鉄"));
-            materials.push(new Material("鋼鉄"));
+            //materials.push(new Material("石"));
+            //materials.push(new Material("鉄"));
+            //materials.push(new Material("鋼鉄"));
 
             let buildings = [];
-            buildings.push(new Building("人工林", 10, 1.2, 1));
-            buildings.push(new Building("石切り場", 10, 1.2, 1));
+            buildings.push(new Building("庭", 10, 1.2, 1));
+            buildings.push(new Building("林", 1000, 1.2, 10));
+            buildings.push(new Building("森", 50000, 1.2, 100));
+            buildings.push(new Building("記念碑", 1000000, 10, 0));
+            //buildings.push(new Building("石切り場", 10, 1.2, 1));
 
 
             let timerId;
             window.onload = init;
             function init() {
                 timerId = setInterval(tick, 100);
+                materials[0].num = 10;
 
                 for (let i=0;i<materials.length;i++) {
                     let parent = document.getElementById("materiallist");
@@ -55,6 +69,7 @@
                     item.appendChild(item3);
                     parent.appendChild(item);
                 }
+
                 for (let i=0;i<buildings.length;i++) {
                     let parent = document.getElementById("buildinglist");
                     let item = document.createElement("div");
@@ -69,9 +84,12 @@
                     item4.textContent = " ";
                     let item5 = document.createElement("button");
                     item5.textContent = "+";
+                    item5.id = i;
+                    item5.onclick = click;
                     let item6 = document.createElement("span");
-                    item6.textContent = " ";
+                    item6.textContent = " コスト : ";
                     let item7 = document.createElement("span");
+                    item7.id = "b" + i + "c";
                     item7.textContent = buildings[i].baseCost;
                     
                     item.appendChild(item1);
@@ -86,17 +104,51 @@
 
                 
             }
+
+            function click(event) {
+                let id = event.target.id;
+                if(id != NaN) {
+                    if (materials[0].num >= buildings[id].cost()) {
+                        materials[0].num -= buildings[id].cost();
+                        buildings[id].num += 1;
+                    }
+                }
+            }
+
             function tick() {
-                materials[0].num += 1;
+                //materials[0].num += 1;
+                for (let i=0; i<buildings.length; i++) {
+                    materials[0].num += buildings[i].basePower * buildings[i].num;
+                }
+                update();
+            }
+
+            function update() {
                 document.getElementById("m0n").textContent = materials[0].num;
+                document.getElementById("b0n").textContent = buildings[0].num;
+                document.getElementById("b1n").textContent = buildings[1].num;
+                document.getElementById("b2n").textContent = buildings[2].num;
+                document.getElementById("b3n").textContent = buildings[3].num;
+                document.getElementById("b0c").textContent = buildings[0].cost();
+                document.getElementById("b1c").textContent = buildings[1].cost();
+                document.getElementById("b2c").textContent = buildings[2].cost();
+                document.getElementById("b3c").textContent = buildings[3].cost();
+                let prod = 0;
+                for (let i=0;i<buildings.length;i++) {
+                    prod += buildings[i].basePower * buildings[i].num;
+                }
+                document.getElementById("prod").textContent = prod * 10;
             }
             
             
         </script>
     </head>
     <body>
-        <h1>放置ゲーム</h1>
+        <h1>シンプルな放置ゲーム</h1>
+        <p>記念碑を建てればゲームクリア</p>
         <div id="materiallist"></div>
+        <div><span>生産力 : </span><span id="prod"></span> (本/秒)</div>
         <div id="buildinglist"></div>
+        <p>0.1秒の間に庭、林、森はそれぞれ1,10,100の木を生産します</p>
     </body>
 </html>
